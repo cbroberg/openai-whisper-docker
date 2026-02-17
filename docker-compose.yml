@@ -1,0 +1,12 @@
+services:
+  whisper:
+    build: .
+    image: whisper-local
+    volumes:
+      # Mount your media folder — change left side to your actual path
+      - ~/Media:/media
+      # Cache downloaded models so they persist between runs
+      - whisper-models:/root/.cache/whisper
+
+volumes:
+  whisper-models:

@@ -1,0 +1,21 @@
+# Media files (don't commit test videos)
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.webm
+
+# Whisper output files
+*.srt
+*.vtt
+*.tsv
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
