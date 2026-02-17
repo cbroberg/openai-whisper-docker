@@ -9,20 +9,20 @@ Transkribér video/audio filer med OpenAI Whisper — uden at installere noget p
 docker compose build
 
 # Gør scriptet executable
-chmod +x whisper-transcribe.sh
+chmod +x wt.sh
 ```
 
 ## Brug
 
 ```bash
 # Transkribér en fil (medium model, engelsk)
-./whisper-transcribe.sh ~/Videos/interview.mp4
+./wt.sh ~/Videos/interview.mp4
 
 # Brug large-v3 for bedste kvalitet (kræver ~3GB RAM ekstra)
-./whisper-transcribe.sh ~/Videos/interview.mp4 large-v3
+./wt.sh ~/Videos/interview.mp4 large-v3
 
 # Auto-detect sprog
-./whisper-transcribe.sh ~/Videos/interview.mp4 medium auto
+./wt.sh ~/Videos/interview.mp4 medium auto
 ```
 
 ## Output
@@ -48,6 +48,24 @@ Whisper genererer flere output-filer ved siden af din video:
 | `large-v3`| 1550 MB   | ~10 GB | Bedst          |
 
 Modeller downloades automatisk første gang og caches i et Docker volume.
+
+## Docker
+
+Containeren kører **ikke** i baggrunden — den starter, transkriberer, og stopper automatisk.
+
+```bash
+# Build image (kun første gang eller efter ændringer i Dockerfile)
+docker compose build
+
+# Se om imaget findes
+docker image ls whisper-local
+
+# Fjern imaget helt (hvis du vil frigøre plads)
+docker image rm whisper-local
+
+# Fjern cached modeller (frigør op til ~10 GB)
+docker volume rm whisper-models
+```
 
 ## Docker Compose (alternativ brug)
 
