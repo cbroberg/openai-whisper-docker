@@ -102,6 +102,33 @@ Ollama korer nativt paa Mac (Apple Silicon acceleration). Kan overstyre model me
 OLLAMA_MODEL=gemma3:12b ./wt-check.sh optagelse.txt
 ```
 
+### Lokale stier (demo/udvikling)
+
+Ollama gemmer modeller lokalt her:
+```
+~/.ollama/models/blobs/    # selve model-vaegt filerne (gemma3:4b = ~3.1 GB)
+~/.ollama/models/manifests/ # model metadata
+```
+
+Whisper-modeller caches i Docker volume:
+```bash
+docker volume inspect whisper-models   # se hvor Docker gemmer det
+```
+
+Oprydning naar demo er faerdig:
+```bash
+# Slet Ollama og alle modeller (~3+ GB)
+brew services stop ollama
+brew uninstall ollama
+rm -rf ~/.ollama
+
+# Slet Whisper Docker image og cached modeller
+docker image rm whisper-local
+docker volume rm whisper-models
+```
+
+> **Note:** I production koerer dette i Docker paa Fly.io — se separat deployment-config.
+
 ## Understottede formater
 
 Alle formater som ffmpeg understotter, herunder:
