@@ -5,17 +5,95 @@
 # Denne liste bruges af wt-check scripts til at guide AI-korrekturen.
 # Tilføj nye ord efterhånden som de opdages.
 
-# Engelsk udvikler-jargon brugt på dansk
-mokke -> mocke (at lave mock/staffage i kode)
-møkke -> mocke (at lave mock/staffage i kode)
-tekstbil -> tekstfil (en fil med tekst)
-deploye -> deploye (at udgive kode til production)
-merche -> merge (at sammenflette kode)
+# ============================================================
+# Git og versionsstyring
+# ============================================================
 kommitte -> committe (at gemme ændringer i git)
+komitte -> committe (at gemme ændringer i git)
+kommit -> commit (en git commit)
+merche -> merge (at sammenflette kode)
+mærke -> merge (at sammenflette kode, hvis kontekst er git)
 pulle -> pulle (at hente kode fra remote)
 pushe -> pushe (at sende kode til remote)
-rikvisst -> request (en forespørgsel)
-endepunkt -> endpoint (API endpoint)
+puste -> pushe (at sende kode til remote)
+stache -> stashe (git stash, gemme ændringer midlertidigt)
+ribase -> rebase (git rebase)
+bransen -> branchen (en git branch)
+tagget -> tagget (en git tag)
+klone -> clone (at klone et repo)
+
+# ============================================================
+# Udvikling og kode
+# ============================================================
+mokke -> mocke (at lave mock/staffage i kode)
+møkke -> mocke (at lave mock/staffage i kode)
+dibage -> debugge (at fejlfinde kode)
+debukke -> debugge (at fejlfinde kode)
 refaktore -> refaktorere (at omstrukturere kode)
+kompilere -> kompilere (at compile kode)
+parce -> parse (at analysere data)
+passe -> parse (at analysere data, hvis kontekst er kode)
+loope -> loope (at køre i loop)
+kashe -> cache (mellemlager for data)
+kæshe -> cache (mellemlager for data)
+cashe -> cache (mellemlager for data)
+snipet -> snippet (et kodestykke)
+snipper -> snippet (et kodestykke)
+fiture -> feature (en ny funktion)
+ficher -> feature (en ny funktion)
+fikse -> fixe (at rette en fejl)
+bogen -> buggen (en fejl i kode)
+bokken -> buggen (en fejl i kode)
+
+# ============================================================
+# Infrastruktur og DevOps
+# ============================================================
+deploye -> deploye (at udgive kode til production)
+displayet -> deployet (kode er deployet/udgivet)
 containere -> containere (Docker containers)
 pipelansen -> pipelinen (CI/CD pipeline)
+pibelansen -> pipelinen (CI/CD pipeline)
+kloster -> cluster (en server-klynge)
+søver -> server (en computer der betjener forespørgsler)
+skansen -> instansen (en server-instans)
+endepunkt -> endpoint (API endpoint)
+ruter -> router (en netværks-router)
+firewallen -> firewallen (en netværks-firewall)
+hoste -> hoste (at hoste/drive en tjeneste)
+
+# ============================================================
+# Agilt og projektledelse
+# ============================================================
+skram -> scrum (agil metode)
+skrum -> scrum (agil metode)
+sprintet -> sprintet (en agil sprint)
+stand op -> standup (dagligt statusmøde)
+bagloggen -> backloggen (liste over opgaver)
+rikvisst -> request (en forespørgsel)
+tiket -> ticket (en opgave/sag)
+tikkert -> ticket (en opgave/sag)
+
+# ============================================================
+# Generelle IT-udtryk brugt på dansk
+# ============================================================
+tekstbil -> tekstfil (en fil med tekst)
+fremværk -> framework (en softwareramme)
+stakken -> stacken (teknologi-stakken)
+streame -> streame (at sende data løbende)
+skalere -> skalere (at scale op/ned)
+launche -> launche (at lancere et produkt)
+patche -> patche (at lappe/opdatere software)
+revue -> reviewe (at gennemgå kode)
+riview -> reviewe (at gennemgå kode)
+dansen -> dashboardet (et overblikspanel)
+loggen -> loggen (en logfil)
+lokken -> loggen (en logfil)
+
+# ============================================================
+# Forkortelser Whisper kan misforstå
+# ============================================================
+epi-aj -> API (Application Programming Interface)
+ju-aj -> UI (User Interface)
+ju-eks -> UX (User Experience)
+si-si-di -> CI/CD (Continuous Integration/Delivery)
+si-el-aj -> CLI (Command Line Interface)
