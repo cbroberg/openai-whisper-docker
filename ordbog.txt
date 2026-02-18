@@ -44,6 +44,7 @@ ficher -> feature (en ny funktion)
 fikse -> fixe (at rette en fejl)
 bogen -> buggen (en fejl i kode)
 bokken -> buggen (en fejl i kode)
+polle -> poll (hente data tidsstyret)
 
 # ============================================================
 # Infrastruktur og DevOps
