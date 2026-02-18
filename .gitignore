@@ -8,6 +8,8 @@
 *.flac
 *.ogg
 *.webm
+*.m4a
+*.aac
 
 # Whisper output files
 *.srt
