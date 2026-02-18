@@ -1,0 +1,21 @@
+# Udvikler-ordbog til Whisper korrektur
+# Format: forkert_ord -> korrekt_ord (forklaring)
+#
+# Whisper hører ofte danske/engelske udviklerord forkert.
+# Denne liste bruges af wt-check scripts til at guide AI-korrekturen.
+# Tilføj nye ord efterhånden som de opdages.
+
+# Engelsk udvikler-jargon brugt på dansk
+mokke -> mocke (at lave mock/staffage i kode)
+møkke -> mocke (at lave mock/staffage i kode)
+tekstbil -> tekstfil (en fil med tekst)
+deploye -> deploye (at udgive kode til production)
+merche -> merge (at sammenflette kode)
+kommitte -> committe (at gemme ændringer i git)
+pulle -> pulle (at hente kode fra remote)
+pushe -> pushe (at sende kode til remote)
+rikvisst -> request (en forespørgsel)
+endepunkt -> endpoint (API endpoint)
+refaktore -> refaktorere (at omstrukturere kode)
+containere -> containere (Docker containers)
+pipelansen -> pipelinen (CI/CD pipeline)

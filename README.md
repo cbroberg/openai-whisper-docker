@@ -1,6 +1,6 @@
 # Whisper Docker Transcriber
 
-Transkribér video/audio filer med OpenAI Whisper — uden at installere noget på din Mac ud over Docker. Inkluderer AI-korrektur via Ollama (lokal, gratis).
+Transkriber video/audio filer med OpenAI Whisper via Docker. Inkluderer AI-korrektur med udvikler-ordbog — via Ollama (lokal, gratis) eller Anthropic Haiku (cloud, ~$0.001/kald).
 
 ## Setup (en gang)
 
@@ -9,35 +9,46 @@ Transkribér video/audio filer med OpenAI Whisper — uden at installere noget p
 docker compose build
 
 # Gor scripts executable
-chmod +x wt.sh wt-da.sh wt-check.sh
+chmod +x wt.sh wt-da.sh wt-check.sh wt-check-cloud.sh
 ```
 
-### AI-korrektur (valgfrit)
+### AI-korrektur
 
+Vaelg en af de to metoder:
+
+**Ollama (lokal, gratis):**
 ```bash
-# Installer Ollama (lokal AI — gratis, ingen API-nogle)
 brew install ollama
 brew services start ollama
 ollama pull gemma3:4b
 ```
 
+**Anthropic Haiku (cloud, kræver API-noegle):**
+```bash
+# Opret noegle paa https://console.anthropic.com/settings/keys
+echo 'ANTHROPIC_API_KEY=sk-ant-...' > .env
+```
+
 ## Scripts
 
-| Script | Formaal |
-| ------------ | -------------------------------------------- |
-| `wt.sh` | Generel transkription (alle sprog) |
-| `wt-da.sh` | Dansk transkription (optimeret) |
-| `wt-check.sh`| AI-korrektur af transkription via Ollama |
+| Script | Formaal | AI |
+| ------------------ | --------------------------------- | ---------------------- |
+| `wt.sh` | Generel transkription (alle sprog)| — |
+| `wt-da.sh` | Dansk transkription (optimeret) | — |
+| `wt-check.sh` | AI-korrektur via Ollama | Lokal, gratis |
+| `wt-check-cloud.sh`| AI-korrektur via Anthropic Haiku | Cloud, ~$0.001/kald |
+
+### Sammenligning af AI-korrektur
+
+| | `wt-check.sh` (Ollama) | `wt-check-cloud.sh` (Haiku) |
+|---|---|---|
+| Pris | Gratis | ~$0.001/kald |
+| Hastighed | ~10 sek | ~2 sek |
+| Internet | Nej | Ja |
+| Kvalitet | God | Lidt bedre |
+| Production | Tung (RAM) | Ideel til Fly.io |
 
 ## Brug
-
-### Transkription (engelsk)
-
-```bash
-./wt.sh interview.mp4
-./wt.sh interview.mp4 large-v3
-./wt.sh interview.mp4 medium auto
-```
 
 ### Dansk transkription
 
@@ -52,24 +63,50 @@ ollama pull gemma3:4b
 ### AI-korrektur
 
 ```bash
-# Korrekturlaes transkription (retter fejlhorte ord)
+# Via Ollama (lokal)
 ./wt-check.sh optagelse.txt
+
+# Via Anthropic Haiku (cloud)
+./wt-check-cloud.sh optagelse.txt
 ```
 
-Gemmer korrigeret tekst som `optagelse-checked.txt` med en liste over rettelser.
-
-### Fuld pipeline: optag -> transkriber -> korriger
+### Fuld pipeline
 
 ```bash
+# Transkriber + korriger (cloud)
+./wt-da.sh ~/Downloads/meeting.m4a && ./wt-check-cloud.sh ~/Downloads/meeting.txt
+
+# Transkriber + korriger (lokal)
 ./wt-da.sh ~/Downloads/meeting.m4a && ./wt-check.sh ~/Downloads/meeting.txt
 ```
+
+### Transkription (engelsk)
+
+```bash
+./wt.sh interview.mp4
+./wt.sh interview.mp4 large-v3
+./wt.sh interview.mp4 medium auto
+```
+
+## Udvikler-ordbog
+
+Filen `ordbog.txt` indeholder kendte fejlhoringer fra Whisper, saerligt engelsk udvikler-jargon brugt paa dansk:
+
+```
+mokke -> mocke (at lave mock/staffage i kode)
+tekstbil -> tekstfil (en fil med tekst)
+merche -> merge (at sammenflette kode)
+deploye -> deploye (at udgive kode til production)
+```
+
+Begge check-scripts laeser automatisk ordbogen og sender den med til AI-modellen. Tilfoej nye ord efterhaanden som de opdages under brug.
 
 ## Output
 
 | Fil | Beskrivelse |
-| ------------ | ---------------------------------- |
+| --------------- | ---------------------------------- |
 | `.txt` | Ren tekst |
-| `-checked.txt` | AI-korrigeret tekst (fra wt-check) |
+| `-checked.txt` | AI-korrigeret tekst |
 | `.srt` | Undertekster (SubRip format) |
 | `.vtt` | Undertekster (WebVTT format) |
 | `.json` | Detaljeret JSON med timestamps |
@@ -91,7 +128,7 @@ Gemmer korrigeret tekst som `optagelse-checked.txt` med en liste over rettelser.
 
 Whisper-modeller downloades automatisk og caches i et Docker volume.
 
-### Ollama (AI-korrektur)
+### Ollama (lokal AI-korrektur)
 
 | Model | Storrelse | Brug |
 | ------------ | --------- | ---------------------- |
@@ -158,19 +195,19 @@ docker volume rm whisper-models
 lydfil (.m4a/.mp3/...)
         |
         v
-  [wt-da.sh / wt.sh]       <- bash script
+  [wt-da.sh / wt.sh]           <- bash script
         |
         v
-  [Docker: whisper-local]   <- OpenAI Whisper i Docker container
+  [Docker: whisper-local]       <- OpenAI Whisper i Docker container
         |
         v
     tekst (.txt)
         |
         v
-  [wt-check.sh]             <- bash script
+  [wt-check.sh]                 <- Ollama (lokal, gratis)
+  [wt-check-cloud.sh]           <- Anthropic Haiku (cloud, ~$0.001)
         |
-        v
-  [Ollama: gemma3:4b]       <- lokal AI paa Mac (Metal GPU)
+        +-- ordbog.txt           <- udvikler-jargon ordbog
         |
         v
   korrigeret tekst (-checked.txt)

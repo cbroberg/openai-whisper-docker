@@ -16,6 +16,9 @@
 *.vtt
 *.tsv
 
+# Secrets
+.env
+
 # OS
 .DS_Store
 

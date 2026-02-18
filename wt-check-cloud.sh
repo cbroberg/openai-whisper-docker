@@ -1,27 +1,24 @@
 #!/bin/bash
-# wt-check.sh — AI-korrektur af Whisper-transkriptioner via Ollama (lokal, gratis)
-# Usage: ./wt-check.sh <tekstfil>
+# wt-check-cloud.sh — AI-korrektur af Whisper-transkriptioner via Anthropic Haiku
+# Usage: ./wt-check-cloud.sh <tekstfil>
 #
 # Examples:
-#   ./wt-check.sh optagelse.txt
-#   ./wt-check.sh /Users/cb/Downloads/interview.txt
+#   ./wt-check-cloud.sh optagelse.txt
+#   ./wt-check-cloud.sh /Users/cb/Downloads/interview.txt
 #
-# Kræver: Ollama installeret med gemma3:4b model
-#   brew install ollama && brew services start ollama && ollama pull gemma3:4b
+# Kræver: ANTHROPIC_API_KEY i .env fil eller som environment variable
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-MODEL="${OLLAMA_MODEL:-gemma3:4b}"
 
 if [ -z "$1" ]; then
-  echo "Usage: ./wt-check.sh <tekstfil>"
+  echo "Usage: ./wt-check-cloud.sh <tekstfil>"
   echo ""
-  echo "Kører AI-korrektur på en Whisper-transkription via Ollama (lokal, gratis)."
+  echo "Kører AI-korrektur på en Whisper-transkription via Anthropic Haiku."
   echo "Gemmer korrigeret tekst som <filnavn>-checked.txt"
   echo ""
-  echo "Kræver: ollama med gemma3:4b model"
-  echo "  brew install ollama && brew services start ollama && ollama pull gemma3:4b"
+  echo "Kræver: ANTHROPIC_API_KEY i .env eller environment"
   exit 1
 fi
 
@@ -32,9 +29,16 @@ if [ ! -f "$TXTFILE" ]; then
   exit 1
 fi
 
-# Check Ollama is running
-if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
-  echo "Ollama kører ikke. Start den med: brew services start ollama"
+# Load API key from .env if not already set
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+  if [ -f "$SCRIPT_DIR/.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+  fi
+fi
+
+if [ -z "$ANTHROPIC_API_KEY" ] || [ "$ANTHROPIC_API_KEY" = "din-noegle-her" ]; then
+  echo "ANTHROPIC_API_KEY mangler. Sæt den i .env filen:"
+  echo "  echo 'ANTHROPIC_API_KEY=sk-ant-...' > $SCRIPT_DIR/.env"
   exit 1
 fi
 
@@ -50,7 +54,7 @@ if [ -f "$SCRIPT_DIR/ordbog.txt" ]; then
 fi
 
 echo "Korrekturlæser: $TXTFILE"
-echo "Model: $MODEL"
+echo "Model: claude-haiku-4-5-20251001"
 if [ -n "$ORDBOG" ]; then
   echo "Ordbog: ordbog.txt"
 fi
@@ -85,15 +89,24 @@ $DICT_SECTION
 TEKST:
 $CONTENT"
 
-RESPONSE=$(curl -s http://localhost:11434/api/generate \
-  -d "$(jq -n --arg model "$MODEL" --arg prompt "$PROMPT" '{
-    model: $model,
-    prompt: $prompt,
-    stream: false,
-    options: { temperature: 0.3 }
+RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+  -H "content-type: application/json" \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d "$(jq -n --arg prompt "$PROMPT" '{
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 2048,
+    messages: [{ role: "user", content: $prompt }]
   }')")
 
-RESULT=$(echo "$RESPONSE" | jq -r '.response // "Fejl: Intet svar fra Ollama"')
+# Check for API errors
+ERROR=$(echo "$RESPONSE" | jq -r '.error.message // empty')
+if [ -n "$ERROR" ]; then
+  echo "API fejl: $ERROR"
+  exit 1
+fi
+
+RESULT=$(echo "$RESPONSE" | jq -r '.content[0].text // "Fejl: Intet svar fra API"')
 
 echo "$RESULT"
 echo ""
