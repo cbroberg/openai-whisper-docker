@@ -1,0 +1,6 @@
+Jeg skal have lavet en app, der scanner alle mine apps, altså mine udviklingsapps, der ligger i C. Robert biblioteket, og jeg er faktisk også i Webhouse biblioteket.
+Det, den skal finde ud af, det er, at den skal kigge i formentlig package.json eller i andre opstartsfiler og finde ud af, hvilke porte, som der bruges.
+Så skal den oprette en database, hvor den registrerer de her forskellige apps med deres GitHub-navne og hvilket portnummer, de er sat til.
+Og så skal jeg have et Next.js simple interface, hvor jeg kan hente en liste over de apps, der er registreret i databasesen, hvor jeg skal kunne rette portnumret der i.
+Så skal jeg desuden have et API, så ledes, at appen kan svare andre værktøjer med et ledigt portnummer, når jeg skal til at udvikle nye apps, så den altid henter et ledigt portnummer fra den her app.
+Og så indsætter den efterfølgende navnet på den nye application og det valgte portnummer i databasesen, så der altid er to vejs styre på det.

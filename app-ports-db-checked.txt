@@ -1,0 +1,9 @@
+Jeg skal have lavet en app, der scanner alle mine apps, altså mine udviklingsapps, der ligger i /Users/cb/Apps/ folder og alle underfoldere. 
+Det, den skal finde ud af, det er, at den skal kigge i formentligt package.json eller i andre opstartsfiler og finde ud af, hvilke porte, som der bruges når udviklingsserveren kører.
+Så skal den oprette en database, hvor den registrerer de her forskellige apps med deres GitHub-navne og hvilket portnummer, de er sat til.
+Og så skal jeg have et Next.js simple interface, hvor jeg kan hente en liste over de apps, der er registreret i databasen, hvor jeg skal kunne rette portnumret.
+Så skal jeg desuden have et API, således, at appen kan svare andre værktøjer med et ledigt portnummer, når jeg skal til at udvikle nye apps, så den altid henter et ledigt portnummer fra den her app. 
+
+Og så indsætter den efterfølgende navnet på den nye application og det valgte portnummer i databasen, så der altid er tovejs styre på det. Så et get vacant port number and set app name + GitHub name + portnumber eforen ny app. API skal udstilles i app root som openapi.yaml der skal være tilgængelig fra app root. 
+
+DB skal være lokal i repo så her er Drizzle ORM setup 

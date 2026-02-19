@@ -26,7 +26,7 @@ if [ -z "$1" ]; then
 fi
 
 FILE="$1"
-MODEL="${2:-large-v3}"
+MODEL="${2:-medium}"
 
 # Resolve absolute path
 FULL_PATH="$(cd "$(dirname "$FILE")" 2>/dev/null && pwd)/$(basename "$FILE")"

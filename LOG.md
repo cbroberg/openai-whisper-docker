@@ -94,6 +94,35 @@ README opdateret loebenede med:
 
 ---
 
+## Session: 2026-02-19
+
+### 1. Transkription af `app-ports-db.m4a`
+
+**Opgave:** Transkriber en ny lydfil med spec for en port-management app.
+
+**Problem:** `large-v3` crashede med exit code 137 (OOM kill) — Docker er begraenset til 7.6 GB RAM, men large-v3 kraever ~10 GB.
+
+**Loesning:** Skiftet til `medium` model (kraever ~5 GB), som tidligere er bevist at virke godt til dansk.
+
+**Kommando:**
+```bash
+./wt-da.sh app-ports-db.m4a medium
+./wt-check-cloud.sh app-ports-db.txt
+```
+
+**Transkription:** Spec for en app der skal:
+- Scanne `cbroberg/` og `Webhouse/` for apps og porte (via `package.json`)
+- Oprette en database med GitHub-appnavne og portnumre
+- Vise et Next.js interface til at rette portnumre
+- Udstille et API der returnerer ledige portnumre og registrerer nye apps
+
+**Haiku-rettelse:**
+- `to vejs` -> `tovejs` (stavning)
+
+**Konklusion:** `medium` er nu default-valg til denne pipeline pga. Docker RAM-begraensningen. `large-v3` kraever Docker Memory sat til 12+ GB i Docker Desktop Settings.
+
+---
+
 ### Git commits (kronologisk)
 
 | Commit | Beskrivelse |
