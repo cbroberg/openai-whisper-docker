@@ -9,7 +9,7 @@ Transkriber video/audio filer med OpenAI Whisper via Docker. Inkluderer AI-korre
 docker compose build
 
 # Gor scripts executable
-chmod +x wt.sh wt-da.sh wt-check.sh wt-check-cloud.sh
+chmod +x wt.sh wt-da.sh wt-yt.sh wt-check.sh wt-check-cloud.sh
 ```
 
 ### AI-korrektur
@@ -32,9 +32,10 @@ echo 'ANTHROPIC_API_KEY=sk-ant-...' > .env
 ## Scripts
 
 | Script | Formaal | AI |
-| ------------------ | --------------------------------- | ---------------------- |
-| `wt.sh` | Generel transkription (alle sprog)| — |
+| ------------------ | ---------------------------------------- | ---------------------- |
+| `wt.sh` | Generel transkription (alle sprog) | — |
 | `wt-da.sh` | Dansk transkription (optimeret) | — |
+| `wt-yt.sh` | YouTube undertitler -> ren tekst | — |
 | `wt-check.sh` | AI-korrektur via Ollama | Lokal, gratis |
 | `wt-check-cloud.sh`| AI-korrektur via Anthropic Haiku | Cloud, ~$0.001/kald |
 
@@ -87,6 +88,30 @@ echo 'ANTHROPIC_API_KEY=sk-ant-...' > .env
 ./wt.sh interview.mp4 large-v3
 ./wt.sh interview.mp4 medium auto
 ```
+
+### YouTube undertitler
+
+Henter auto-genererede undertitler direkte fra YouTube — ingen Whisper/Docker nødvendigt.
+
+```bash
+# Hent undertitler og gem som .txt
+./wt-yt.sh https://www.youtube.com/watch?v=abc123
+
+# Med valgfrit output-navn
+./wt-yt.sh https://www.youtube.com/watch?v=abc123 mit-output-navn
+```
+
+Kræver `yt-dlp`:
+```bash
+brew install yt-dlp
+```
+
+**Hvornår bruge hvad:**
+
+| Situation | Script |
+|---|---|
+| Lokal lydfil/video (møde, diktat) | `wt-da.sh` / `wt.sh` |
+| YouTube-video med auto-captions | `wt-yt.sh` |
 
 ## Udvikler-ordbog
 
@@ -192,23 +217,23 @@ docker volume rm whisper-models
 ## Arkitektur
 
 ```
-lydfil (.m4a/.mp3/...)
-        |
-        v
-  [wt-da.sh / wt.sh]           <- bash script
-        |
-        v
-  [Docker: whisper-local]       <- OpenAI Whisper i Docker container
-        |
-        v
-    tekst (.txt)
-        |
-        v
+lydfil (.m4a/.mp3/...)              YouTube URL
+        |                                |
+        v                                v
+  [wt-da.sh / wt.sh]            [wt-yt.sh + yt-dlp]
+        |                                |
+        v                                |
+  [Docker: whisper-local]               |
+        |                                |
+        v                                v
+                    tekst (.txt)
+                         |
+                         v
   [wt-check.sh]                 <- Ollama (lokal, gratis)
   [wt-check-cloud.sh]           <- Anthropic Haiku (cloud, ~$0.001)
-        |
-        +-- ordbog.txt           <- udvikler-jargon ordbog
-        |
-        v
-  korrigeret tekst (-checked.txt)
+                         |
+                         +-- ordbog.txt  <- udvikler-jargon ordbog
+                         |
+                         v
+              korrigeret tekst (-checked.txt)
 ```
