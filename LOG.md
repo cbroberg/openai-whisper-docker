@@ -123,6 +123,40 @@ README opdateret loebenede med:
 
 ---
 
+## Session: 2026-02-20
+
+### 1. Forsøg: Transkription af MP4-videoer med Whisper
+
+**Opgave:** Transkriber to lokale MP4-videoer om Docker sandboxes og Claude Code.
+
+**Problem:** Whisper medium på CPU + store MP4-filer = for langsomt og for ressourcekrævende. Forsøgt kørt parallelt (2 containers á ~5 GB) — Docker har kun 7.6 GB, OOM kill igen. Droppet.
+
+---
+
+### 2. Ny tilgang: YouTube undertitler via `yt-dlp`
+
+**Baggrund:** De to MP4-filer var downloadede YouTube-videoer — undertitlerne kan hentes direkte fra YouTube på sekunder, uden CPU/RAM-forbrug.
+
+**Setup:**
+```bash
+brew install yt-dlp
+```
+
+**Resultat:**
+- Oprettet `wt-yt.sh` — henter auto-genererede engelske undertitler fra YouTube, renser VTT-format til ren tekst (fjerner tidskoder, tags og duplikerede linjer), sætter linjeskift ved sætningsafslutninger
+- Kører på sekunder vs. minutter for Whisper
+- Output-fil klar til `wt-check-cloud.sh` hvis ønsket
+
+**Transkriberede videoer:**
+| Fil | URL |
+|---|---|
+| `sandbox-tool-claude-code-incus.txt` | `youtube.com/watch?v=sEbgr5p3PnU` |
+| `docker-sandboxes-claude-code-security.txt` | `youtube.com/watch?v=t78-JUnTK5Q` |
+
+**Konklusion:** `wt-yt.sh` er det klare valg til YouTube-videoer. Whisper (`wt-da.sh`) forbliver relevant for lokale optagelser uden undertitler (møder, diktater, interviews).
+
+---
+
 ### Git commits (kronologisk)
 
 | Commit | Beskrivelse |
