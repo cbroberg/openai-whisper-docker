@@ -6,4 +6,4 @@ Så skal jeg desuden have et API, således, at appen kan svare andre værktøjer
 
 Og så indsætter den efterfølgende navnet på den nye application og det valgte portnummer i databasen, så der altid er tovejs styre på det. Så et get vacant port number and set app name + GitHub name + portnumber eforen ny app. API skal udstilles i app root som openapi.yaml der skal være tilgængelig fra app root. 
 
-DB skal være lokal i repo så her er Drizzle ORM setup 
+DB skal være lokal i repo så her er Drizzle ORM setup og better-sqlite3. 
