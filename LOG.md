@@ -157,6 +157,28 @@ brew install yt-dlp
 
 ---
 
+## Session: 2026-02-20 (del 2)
+
+### 1. YouTube undertitler i brug — tre videoer transkriberet
+
+Brugt `wt-yt.sh` på tre YouTube-videoer:
+
+| Fil | Video |
+|---|---|
+| `sandbox-tool-claude-code-incus.txt` | Docker Sandboxes + Claude Code (Incus) |
+| `docker-sandboxes-claude-code-security.txt` | Docker Sandboxes + Agentic AI Security |
+| `The-Push-Notifications-Guide-for-Ionic--Capacitor.txt` | Push Notifications med Ionic + Capacitor + Firebase |
+
+Alle tre hentede på sekunder. Ingen RAM-problemer, ingen Docker.
+
+### 2. README opdateret
+
+- `wt-yt.sh` tilføjet til script-tabel og setup-sektion
+- Ny "Hvornår bruge hvad"-tabel (lokal fil vs. YouTube)
+- Arkitektur-diagram opdateret med YouTube-gren
+
+---
+
 ### Git commits (kronologisk)
 
 | Commit | Beskrivelse |
